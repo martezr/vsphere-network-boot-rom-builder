@@ -1,0 +1,26 @@
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+name: Network Rom Build
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build and publish VMware network boot roms
+      id: build-rom
+      run: |
+        git clone git://git.ipxe.org/ipxe.git
+        mv configs/general.h ipxe/src/config
+        mv configs/settings.h ipxe/src/config
+        cd ipxe/src
+        make vmware
+        ls bins
